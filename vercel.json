@@ -1,0 +1,14 @@
+{
+  "crons": [
+    {
+      "path": "/api/sync?cron_secret=$CRON_SECRET",
+      "schedule": "0 3 * * *",
+      "comment": "Daily DGEG sync at 3am UTC (5am/6am Portugal depending on DST)"
+    },
+    {
+      "path": "/api/forecast?cron_secret=$CRON_SECRET",
+      "schedule": "0 17 * * 5",
+      "comment": "Weekly forecast at Friday 5pm UTC = 6pm WET / 7pm WEST"
+    }
+  ]
+}

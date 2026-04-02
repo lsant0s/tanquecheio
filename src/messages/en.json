@@ -1,0 +1,24 @@
+{
+  "common": {
+    "appName": "Tanque Cheio",
+    "tagline": "The cheapest fuel, right around the corner.",
+    "dataDisclaimer": "Data from API Aberta / DGEG - updated with the latest available data"
+  },
+  "nav": {
+    "home": "Home",
+    "today": "Today in Portugal",
+    "forecast": "Weekly Forecast",
+    "map": "Map"
+  },
+  "home": {
+    "title": "Today in Portugal",
+    "nationalAvg": "National Average",
+    "lastUpdated": "Last updated",
+    "savingsCalculator": "Savings Calculator",
+    "tankSize": "Tank capacity"
+  },
+  "forecast": {
+    "title": "Weekly Forecast",
+    "disclaimer": "Forecast based on international market signals."
+  }
+}

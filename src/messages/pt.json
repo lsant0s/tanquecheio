@@ -1,0 +1,24 @@
+{
+  "common": {
+    "appName": "Tanque Cheio",
+    "tagline": "O mais barato, mesmo ao virar da esquina.",
+    "dataDisclaimer": "Dados da API Aberta / DGEG – actualizados com os dados mais recentes disponíveis"
+  },
+  "nav": {
+    "home": "Início",
+    "today": "Hoje em Portugal",
+    "forecast": "Previsão Semanal",
+    "map": "Mapa"
+  },
+  "home": {
+    "title": "Hoje em Portugal",
+    "nationalAvg": "Média Nacional",
+    "lastUpdated": "Última actualização",
+    "savingsCalculator": "Calculadora de Poupança",
+    "tankSize": "Capacidade do depósito"
+  },
+  "forecast": {
+    "title": "Previsão Semanal",
+    "disclaimer": "Previsão baseada em sinais de mercado internacionais."
+  }
+}
