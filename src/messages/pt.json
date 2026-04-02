@@ -17,8 +17,24 @@
     "savingsCalculator": "Calculadora de Poupança",
     "tankSize": "Capacidade do depósito"
   },
+  "station": {
+    "title": "Posto de Combustível",
+    "fuelPrices": "Preços dos Combustíveis",
+    "priceHistory": "Histórico de Preços",
+    "paymentMethods": "Métodos de Pagamento",
+    "amenities": "Serviços"
+  },
   "forecast": {
-    "title": "Previsão Semanal",
+    "title": "Previsão de Preços para a Próxima Semana",
     "disclaimer": "Previsão baseada em sinais de mercado internacionais."
+  },
+  "map": {
+    "title": "Mapa de Postos",
+    "useMyLocation": "Usar a minha localização",
+    "radius": "Raio",
+    "filters": {
+      "fuelType": "Tipo de Combustível",
+      "all": "Todos"
+    }
   }
 }
