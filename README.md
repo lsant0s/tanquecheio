@@ -4,6 +4,19 @@
 
 ---
 
+## Data Source
+
+Prices are sourced from **[API Aberta](https://api.apiaberta.pt/v1/fuel/prices)** which aggregates official data from **[DGEG](https://www.dgeg.gov.pt/)** (Direção-Geral de Energia e Geologia).
+
+### Sync Configuration
+
+- **Endpoint:** `https://api.apiaberta.pt/v1/fuel/prices?key=API_KEY`
+- **Cron:** Daily at 3am UTC via Vercel Cron
+- **Auth:** Protected by `CRON_SECRET` env var
+- **API Key:** `API_ABERTA_KEY` in `.env.local`
+
+---
+
 ## Stack
 
 | Layer | Choice |
@@ -30,10 +43,14 @@ src/
 │   │   ├── page.tsx        # Homepage (national prices, savings calculator)
 │   │   ├── hoje-em-portugal/  # National stats dashboard
 │   │   ├── proxima-semana/    # Weekly forecast page
-│   │   └── mais-barato/       # Cheapest near me + map
+│   │   ├── mais-barato/       # Cheapest near me + map
+│   │   ├── posto/[district]/[stationSlug]/  # Station detail
+│   │   ├── distrito/[district]/             # District SEO pages
+│   │   └── concelho/[concelho]/             # Concelho SEO pages
 │   ├── api/
-│   │   ├── sync/route.ts      # DGEG sync endpoint (CRON_SECRET protected)
-│   │   └── forecast/route.ts  # Forecast computation (weekly cron)
+│   │   ├── sync/route.ts      # API Aberta sync (CRON_SECRET protected)
+│   │   ├── forecast/route.ts  # Forecast computation (weekly cron)
+│   │   └── admin/status/route.ts  # Health monitoring
 │   ├── globals.css
 │   └── layout.tsx         # Root passthrough layout
 ├── components/
@@ -67,15 +84,13 @@ public/
 | `push_subscription` | Web Push (V3) |
 | `sync_log` | Sync job monitoring |
 
-**Materialized view:** `latest_fuel_prices` — current prices for fast homepage/district stats
-
 ---
 
 ## Cron Jobs (`vercel.json`)
 
 | Schedule | Time (UTC) | Path | Purpose |
 |---|---|---|---|
-| Daily | `0 3 * * *` | `/api/sync` | Fetch DGEG prices, upsert, refresh view |
+| Daily | `0 3 * * *` | `/api/sync` | Fetch API Aberta prices, upsert, refresh view |
 | Weekly | `0 17 * * 5` | `/api/forecast` | Compute Brent-based forecast |
 
 ---
@@ -86,7 +101,7 @@ public/
 # 1. Copy env vars
 cp .env.example .env.local
 
-# 2. Fill in required keys (DB, Clerk, CRON_SECRET)
+# 2. Fill in required keys (DB, Clerk, CRON_SECRET, API_ABERTA_KEY)
 
 # 3. Install
 npm install --legacy-peer-deps
@@ -97,11 +112,14 @@ npx drizzle-kit generate
 # 5. Push to DB
 npx drizzle-kit push
 
-# 6. Run
+# 6. Run sync manually (for testing)
+curl -X POST "http://localhost:3000/api/sync?cron_secret=YOUR_SECRET"
+
+# 7. Start dev server
 npm run dev
 ```
 
-Open [http://localhost:3001](http://localhost:3001) (or 3000 if free).
+Open [http://localhost:3000](http://localhost:3000) (or 3001 if 3000 occupied).
 
 ---
 
@@ -113,6 +131,9 @@ Open [http://localhost:3001](http://localhost:3001) (or 3000 if free).
 | `/pt/hoje-em-portugal` | National stats dashboard |
 | `/pt/proxima-semana` | Weekly forecast |
 | `/pt/mais-barato` | Cheapest near me + interactive map |
+| `/pt/posto/[district]/[slug]` | Station detail page |
+| `/pt/distrito/[district]` | District SEO page |
+| `/pt/concelho/[concelho]` | Concelho SEO page |
 | `/en/*` | Same routes in English |
 
 ---
@@ -121,32 +142,6 @@ Open [http://localhost:3001](http://localhost:3001) (or 3000 if free).
 
 | Endpoint | Method | Purpose |
 |---|---|---|
-| `/api/sync` | POST | Sync DGEG data (protected by CRON_SECRET) |
+| `/api/sync` | POST | Sync API Aberta data (protected by CRON_SECRET) |
 | `/api/forecast` | GET/POST | Get forecast / run forecast cron (protected) |
-
----
-
-## V1 Scope (Current)
-
-- [x] Project setup with Next.js 15 + Tailwind 4
-- [x] Drizzle ORM schema (8 tables + relations)
-- [x] i18n locale routing (PT + EN)
-- [x] Homepage with fuel prices, biggest drops, savings calculator
-- [x] National stats dashboard (`/hoje-em-portugal`)
-- [x] Weekly forecast page (`/proxima-semana`)
-- [x] Map page with Leaflet (`/mais-barato`)
-- [x] DGEG sync endpoint (scaffolded — parsers need API response format)
-- [x] Forecast cron endpoint (Brent + EUR/USD)
-- [x] vercel.json with cron configuration
-- [ ] Station detail pages (`/posto/[district]/[slug]-[id]`)
-- [ ] District/concelho SEO pages
-- [ ] Admin monitoring (`/api/admin/status`)
-- [ ] DGEG SOAP response parsers
-- [ ] Auth integration (Clerk)
-- [ ] Price alerts (V2)
-
----
-
-## License
-
-Private — Tanque Cheio © 2026
+| `/api/admin/status` | GET | Health check + sync status (protected by CR
